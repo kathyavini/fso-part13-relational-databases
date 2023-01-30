@@ -6,7 +6,13 @@ const { SECRET } = require('../util/config');
 
 const blogFinder = async (req, res, next) => {
   try {
-    const blog = await Blog.findByPk(req.params.id);
+    const blog = await Blog.findByPk(req.params.id, {
+      attributes: { exclude: ['userId'] },
+      include: {
+        model: User,
+        attributes: ['name'],
+      },
+    });
     if (blog === null) {
       const error = new Error(`Resource not found: ${req.originalUrl}`);
       error.statusCode = 404;
@@ -21,7 +27,13 @@ const blogFinder = async (req, res, next) => {
 };
 
 router.get('/', async (req, res) => {
-  const blogs = await Blog.findAll();
+  const blogs = await Blog.findAll({
+    attributes: { exclude: ['userId'] },
+    include: {
+      model: User,
+      attributes: ['name'],
+    },
+  });
   res.json(blogs);
 });
 
