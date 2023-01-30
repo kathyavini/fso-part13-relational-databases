@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
     const user = await User.create(req.body);
     res.json(user);
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(400).json({ error: error.errors.map((x) => x.message) });
   }
 });
 
